@@ -20,53 +20,32 @@ Fixed the Vercel function runtime error:
 ```json
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": null,
-  "installCommand": "npm install",
-  "devCommand": "npm run dev",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "handle": "filesystem"
     },
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
 ```
 
 **Key Points:**
-- `"framework": null` - Prevents Next.js detection
-- `"outputDirectory": "dist"` - Vite's build output
-- `"buildCommand": "npm run build"` - Standard Vite build
-- Rewrites for SPA routing and API routes
+- Uses `@vercel/static-build` - Explicitly tells Vercel this is a static site
+- `"distDir": "dist"` - Points to Vite's build output directory
+- `routes` configuration - Handles SPA routing properly
+- No framework detection - Completely avoids Next.js detection issues
 
 ### 2. Updated `package.json` Scripts
 ```json
