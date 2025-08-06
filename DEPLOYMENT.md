@@ -1,10 +1,17 @@
 # 🚀 Vercel Deployment Guide for Vite App
 
-## ✅ Problem Solved
+## ✅ Problems Solved
 
+### 1. Next.js Detection Issue
 Your Vite app was being incorrectly detected as a Next.js app by Vercel, causing the error:
 ```
 "The file '/vercel/path0/.next/routes-manifest.json' couldn't be found."
+```
+
+### 2. Function Runtime Error
+Fixed the Vercel function runtime error:
+```
+"Error: Function runtimes must have a valid version, for example `now-php@1.0.0`"
 ```
 
 ## 🔧 Configuration Applied
@@ -18,16 +25,7 @@ Your Vite app was being incorrectly detected as a Next.js app by Vercel, causing
   "framework": null,
   "installCommand": "npm install",
   "devCommand": "npm run dev",
-  "functions": {
-    "api/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
@@ -40,6 +38,23 @@ Your Vite app was being incorrectly detected as a Next.js app by Vercel, causing
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
         }
       ]
     }
@@ -98,7 +113,15 @@ export default defineConfig({
 
 ## 🚀 Deployment Steps
 
-### Option 1: Vercel CLI (Recommended)
+### Option 1: Quick Deploy Script (Recommended)
+
+1. **Run the deployment script:**
+   ```bash
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+
+### Option 2: Vercel CLI (Manual)
 
 1. **Install Vercel CLI:**
    ```bash
