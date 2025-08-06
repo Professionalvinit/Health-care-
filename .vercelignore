@@ -72,9 +72,8 @@ jspm_packages/
 tmp/
 temp/
 
-# Development files
+# Development files (keep tsconfig files for build)
 src/
 public/
 *.config.js
 *.config.ts
-tsconfig*.json
